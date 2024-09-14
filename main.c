@@ -1,8 +1,8 @@
 #define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include "prompt.h"
+#include "parser.h"
 
 #define RUNNING -1
 #define TERMINATED 0
@@ -20,13 +20,7 @@ int readline(char **line) {
     return len-1;
 }
 
-int parseline(char *line) {
-    int status = RUNNING;
-    if(strcmp(line, "exit") == 0) {
-        status = TERMINATED;
-    }
-    return status;
-}
+
 
 int loop() {
     int status = RUNNING;
