@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "prompt.h"
 
 #define RUNNING -1
 #define TERMINATED 0
@@ -10,38 +11,39 @@
 
 int readline(char **line) {
     size_t n = 1024;
-    *line = malloc(n * sizeof(char));
+    *line = (char *)malloc(n * sizeof(char));
     int len = getline(line, &n, stdin);
     // Remove trailing newline
-    char *copy = malloc(n * sizeof(char));
-    strncpy(copy, *line, len-1);
-    *line = copy;
+    char *cp = *line;
+    cp[len-1] = '\0';
+    *line = cp;
     return len-1;
 }
 
 int parseline(char *line) {
+    int status = RUNNING;
     if(strcmp(line, "exit") == 0) {
-        return TERMINATED;
+        status = TERMINATED;
     }
-    return RUNNING;
+    return status;
 }
 
-int loop(const char* prompt) {
+int loop() {
     int status = RUNNING;
     while(status == RUNNING) {
-        fputs(prompt, stderr);
-        char *line = "";
+        prompt();
+        char *line;
         readline(&line);
         status = parseline(line);
+        free(line);
         if(status == TERMINATED) {
-            return TERMINATED;
+            continue;
         }
     }
     return status;
 }
 
 int main() {
-    const char* prompt = "osh> ";
-    int status = loop(prompt);
+    int status = loop();
     return status;
 }
