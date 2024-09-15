@@ -56,24 +56,16 @@ char **split(char *line) {
     return args;
 
 }
-void freeargs(int argc, char **args) {
-    for(int i = 0 ; i < argc ; i++) {
-        free(args[i]);
-    }
-    free(args);
-}
 
-int parseline(char *line) {
+int parseline(char *line, char ***args) {
     int argc = countargs(line);
-    char **args = split(line);
-    if(argc == 0) {
-        freeargs(argc, args);
+    *args = split(line);
+    return argc;
+    /*if(argc == 0) {
         return RUNNING;
     }
-    if(argc == 1 && strcmp(args[0], "exit") == 0) {
-        freeargs(argc, args);
+    if(argc == 1 && strcmp(*args[0], "exit") == 0) {
         return TERMINATED;
     }
-    freeargs(argc, args);
-    return RUNNING;
+    return RUNNING;*/
 }
