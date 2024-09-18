@@ -12,7 +12,11 @@ int cwd(char **buf) {
 }
 
 int user(char **buf) {
-    *buf = getlogin();
+    *buf = getenv("USER");
+    if(buf == NULL) {
+        strcpy(*buf, "");
+        return 0;
+    }
     int len = strlen(*buf);
     return len;
 }
