@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
@@ -16,10 +17,13 @@ int exitbi() {
 
 int cd(int argc, char **args) {
     if(argc < 2) {
-        return 1;
+        return -1;
     }
     const char *path = args[1];
-    chdir(path);
+    int status = chdir(path);
+    if(status != 0) {
+        perror("cd");
+    }
     return -1;
 }
 
