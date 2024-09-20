@@ -5,23 +5,18 @@
 #include <string.h>
 
 
-int cwd(char **buf) {
+void cwd(char **buf) {
     *buf = get_current_dir_name();
-    int len = strlen(*buf);
-    return len;
 }
 
-int user(char **buf) {
+void user(char **buf) {
     *buf = getenv("USER");
     if(buf == NULL) {
         strcpy(*buf, "");
-        return 0;
     }
-    int len = strlen(*buf);
-    return len;
 }
 
-char *checkhomedir(int cwdlen, char *cwd) {
+char *checkhomedir(char *cwd) {
     char *homedir = getenv("HOME");
     if(homedir == NULL) {
         return cwd;
@@ -29,6 +24,7 @@ char *checkhomedir(int cwdlen, char *cwd) {
     if (strstr(cwd, homedir) == NULL) {
         return cwd;
     }
+    int cwdlen = strlen(cwd);
     int homelen = strlen(homedir);
     int remlen = cwdlen - homelen + 1;
     char *rem = (char *)malloc(remlen * sizeof(char));
@@ -44,12 +40,15 @@ char *checkhomedir(int cwdlen, char *cwd) {
 
 void prompt() {
     char *cwdbuf;
-    int cwdlen = cwd(&cwdbuf);
+    cwd(&cwdbuf);
     char *userbuf;
-    int userlen = user(&userbuf);
-    cwdbuf = checkhomedir(cwdlen, cwdbuf);
-    char *prompt = malloc((cwdlen + userlen + 10) * sizeof(char));
-    sprintf(prompt, "%s:%s> ", userbuf, cwdbuf);
+    user(&userbuf);
+    cwdbuf = checkhomedir(cwdbuf);
+
+    char *format = "%s:%s> ";
+    int len = snprintf(NULL, 0, format, userbuf, cwdbuf);
+    char *prompt = malloc(len * sizeof(char));
+    sprintf(prompt, format, userbuf, cwdbuf);
     fputs(prompt, stderr);
     
     free(cwdbuf);
