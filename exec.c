@@ -7,9 +7,6 @@
 #include <errno.h>
 #include "builtin.h"
 
-#define RUNNING -1
-#define TERMINATED 0
-#define ERROR 1
 
 void printerror(char *command) {
     char *format = "%s";
@@ -20,13 +17,13 @@ void printerror(char *command) {
     free(errorstr);
 }
 
-int exec(int argc, char **argv) {
+void exec(int argc, char **argv) {
     if(argc == 0) {
-        return RUNNING;
+        return;
     }
     if(isbuiltin(argv[0])) {
-        int status = execbuiltin(argc, argv);
-        return status;
+        execbuiltin(argc, argv);
+        return;
     }
     
     char *command = argv[0];
@@ -38,6 +35,4 @@ int exec(int argc, char **argv) {
         printerror(command);
         exit(0);
     }
-
-    return RUNNING;
 }

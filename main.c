@@ -5,10 +5,6 @@
 #include "parser.h"
 #include "exec.h"
 
-#define RUNNING -1
-#define TERMINATED 0
-#define ERROR 1
-
 
 int readline(char **line) {
     size_t n = 1024;
@@ -21,26 +17,15 @@ int readline(char **line) {
     return len-1;
 }
 
-
-
-int loop() {
-    int status = RUNNING;
-    while(status == RUNNING) {
+int main() {
+    while(1) {
         prompt();
         char *line;
         readline(&line);
         char **argv;
         int argc = parseline(line, &argv);
         free(line);
-        status = exec(argc, argv);
-        if(status == TERMINATED) {
-            continue;
-        }
+        exec(argc, argv);
     }
-    return status;
-}
-
-int main() {
-    int status = loop();
-    return status;
+    return 0;
 }

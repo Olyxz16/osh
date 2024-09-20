@@ -7,24 +7,23 @@
 
 typedef struct command_pair {
     char *command;
-    int (*fun)(int, char **);
+    void (*fun)(int, char **);
 } CommandPair;
 
 
-int exitbi() {
+void exitbi() {
     exit(0);
 }
 
-int cd(int argc, char **args) {
+void cd(int argc, char **args) {
     if(argc < 2) {
-        return -1;
+        return;
     }
     const char *path = args[1];
     int status = chdir(path);
     if(status != 0) {
         perror("cd");
     }
-    return -1;
 }
 
 
@@ -51,13 +50,12 @@ CommandPair *funfromcommand(char *command) {
     }
     return NULL;
 }
-int execbuiltin(int argc, char **argv) {
+void execbuiltin(int argc, char **argv) {
     char *command = argv[0];
     CommandPair *pair = funfromcommand(command);
     if(pair == NULL) {
-        return -1;
+        return;
     }
-    int (*fun)(int, char **) = (*pair).fun;
-    int status = fun(argc, argv);
-    return status;
+    void (*fun)(int, char **) = (*pair).fun;
+    fun(argc, argv);
 }

@@ -2,6 +2,6 @@
 #define BUILTIN_H
 
 bool isbuiltin(char *command);
-int execbuiltin(int argc, char **argv);
+void execbuiltin(int argc, char **argv);
 
 #endif
