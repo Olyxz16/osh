@@ -10,3 +10,7 @@ debug-leak: build
 
 build:
 	gcc -Wall -Wextra -pedantic -std=c99 -o ./osh.out *.c
+
+clean:
+	rm *.out
+	rm *.o
