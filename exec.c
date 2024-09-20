@@ -6,14 +6,18 @@
 #include <stdio.h>
 #include <errno.h>
 #include "builtin.h"
-
+#include "colors.h"
 
 void printerror(char *command) {
     char *format = "%s";
     int len = snprintf(NULL, 0, format, command, errno, command);
     char *errorstr = malloc((len+1) * sizeof(char));
     sprintf(errorstr, format, command, errno, command);
+    
+    fontred(); 
     perror(errorstr);
+    fontreset();
+    
     free(errorstr);
 }
 

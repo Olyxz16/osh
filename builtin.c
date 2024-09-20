@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
-
+#include "colors.h"
 
 typedef struct command_pair {
     char *command;
@@ -22,7 +22,9 @@ void cd(int argc, char **args) {
     const char *path = args[1];
     int status = chdir(path);
     if(status != 0) {
+        fontred();
         perror("cd");
+        fontreset();
     }
 }
 
