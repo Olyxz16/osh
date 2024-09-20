@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "colors.h"
 
 
 void cwd(char **buf) {
@@ -45,7 +46,7 @@ void prompt() {
     user(&userbuf);
     cwdbuf = checkhomedir(cwdbuf);
 
-    char *format = "%s:%s> ";
+    char *format = _GN "%s"_0":"_BL"%s> " _0;
     int len = snprintf(NULL, 0, format, userbuf, cwdbuf);
     char *prompt = malloc(len * sizeof(char));
     sprintf(prompt, format, userbuf, cwdbuf);
