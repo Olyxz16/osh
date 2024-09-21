@@ -2,10 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define RUNNING -1
-#define TERMINATED 0
-#define ERROR 1
-
 int countargs(char *line) {
     int c = 0;
     int len = strlen(line);
@@ -61,11 +57,4 @@ int parseline(char *line, char ***args) {
     int argc = countargs(line);
     *args = split(line);
     return argc;
-    /*if(argc == 0) {
-        return RUNNING;
-    }
-    if(argc == 1 && strcmp(*args[0], "exit") == 0) {
-        return TERMINATED;
-    }
-    return RUNNING;*/
 }
