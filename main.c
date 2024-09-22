@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/wait.h>
 #include "prompt.h"
 #include "parser.h"
 #include "exec.h"
@@ -17,15 +18,22 @@ int readline(char **line) {
     return len-1;
 }
 
+void waitallchildren(int childc) {
+    for(int i = 0 ; i < childc ; i++) {
+        wait(NULL);
+    } 
+}
+
 int main() {
     while(1) {
         prompt();
         char *line;
         readline(&line);
-        char **argv;
-        int argc = parseline(line, &argv);
+        command_t **commands;
+        int comc = parse(line, &commands);
         free(line);
-        exec(argc, argv);
+        exec(comc, commands);
+        waitallchildren(comc);
     }
     return 0;
 }

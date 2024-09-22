@@ -1,6 +1,14 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-int parseline(char *line, char ***args);
+typedef struct command_struct {
+    char *command;
+    int argc;
+    char **args;
+    int in;
+    int out;
+}  command_t;
+
+int parse(char *line, command_t ***commands);
 
 #endif

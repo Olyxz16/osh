@@ -7,6 +7,7 @@
 #include <errno.h>
 #include "builtin.h"
 #include "colors.h"
+#include "parser.h"
 
 void printerror(char *command) {
     char *format = "%s";
@@ -21,22 +22,31 @@ void printerror(char *command) {
     free(errorstr);
 }
 
-void exec(int argc, char **argv) {
-    if(argc == 0) {
-        return;
-    }
-    if(isbuiltin(argv[0])) {
-        execbuiltin(argc, argv);
+void execcmd(command_t *cmd) {
+    if(isbuiltin(cmd->command)) {
+        execbuiltin(cmd->argc, cmd->args);
         return;
     }
     
-    char *command = argv[0];
     __pid_t child_pid = fork();
     if(child_pid) { // we are parent
-        wait(NULL);
+        close(cmd->out);
     } else { // we are child
-        execvp(command, argv);
-        printerror(command);
+        if(cmd->in != -1) {
+            dup2(cmd->in, STDIN_FILENO);
+        }
+        if(cmd->out != -1) {
+            dup2(cmd->out, STDOUT_FILENO);
+        }
+        close(cmd->in);
+        execvp(cmd->command, cmd->args);
+        printerror(cmd->command);
         exit(0);
     }
+}
+
+void exec(int comc, command_t **commands) {
+    for(int i = 0 ; i < comc ; i++) {
+        execcmd(commands[i]);
+    } 
 }
