@@ -28,12 +28,14 @@ char *checkhomedir(char *cwd) {
     int cwdlen = strlen(cwd);
     int homelen = strlen(homedir);
     int remlen = cwdlen - homelen + 1;
-    char *rem = (char *)malloc(remlen * sizeof(char));
+    char *rem = malloc(remlen * sizeof(char));
     for(int i = 0 ; i < remlen ; i++) {
         rem[i] = cwd[i+homelen];
     }
-    char *res = (char *)malloc((remlen+1) * sizeof(char));
-    sprintf(res, "~%s", rem);
+    char *format = "~%s";
+    int reslen = snprintf(NULL, 0, format, rem) + 1;
+    char *res = malloc(reslen * sizeof(char));
+    sprintf(res, format, rem);
     free(cwd);
     free(rem);
     return res;
@@ -47,7 +49,7 @@ void prompt() {
     cwdbuf = checkhomedir(cwdbuf);
 
     char *format = _GN "%s"_0":"_BL"%s> " _0;
-    int len = snprintf(NULL, 0, format, userbuf, cwdbuf);
+    int len = snprintf(NULL, 0, format, userbuf, cwdbuf) + 1;
     char *prompt = malloc(len * sizeof(char));
     sprintf(prompt, format, userbuf, cwdbuf);
     fputs(prompt, stderr);
