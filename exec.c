@@ -30,15 +30,17 @@ void execcmd(command_t *cmd) {
     
     __pid_t child_pid = fork();
     if(child_pid) { // we are parent
-        close(cmd->out);
+        if(cmd->out != -1) {
+            close(cmd->out);
+        }
     } else { // we are child
         if(cmd->in != -1) {
             dup2(cmd->in, STDIN_FILENO);
+            close(cmd->in);
         }
         if(cmd->out != -1) {
             dup2(cmd->out, STDOUT_FILENO);
         }
-        close(cmd->in);
         execvp(cmd->command, cmd->args);
         printerror(cmd->command);
         exit(0);
