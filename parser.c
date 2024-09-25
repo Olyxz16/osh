@@ -15,12 +15,13 @@ command_t *def(char *comname) {
     command_t *command = malloc(sizeof(command_t));
     command->command = comname;
     command->argc = 1;
-    command->args = malloc(1 * sizeof(char *));
+    command->args = malloc(sizeof(char *));
     command->args[0] = comname;
     command->in = -1;
     command->out = -1;
     return command;
 }
+
 
 
 /*================================================*/
@@ -132,8 +133,8 @@ void parsetoken(int *ind, char **tokens, int *comc, command_t ***commands) {
 }
 
 int parsetokens(int argc, char **tokens, command_t ***commands) {
-    int comc;
-    int step;
+    int comc = 0;
+    int step = 0;
     while(step < argc) {
         parsetoken(&step, tokens, &comc, commands); 
         step++;
@@ -144,7 +145,7 @@ int parsetokens(int argc, char **tokens, command_t ***commands) {
 int parse(char *line, command_t ***commands) {
     int argc = countargs(line);
     char **tokens = split(line, argc);
-    *commands = malloc(1 * sizeof(command_t));
+    *commands = malloc(sizeof(command_t *));
     int commandc = parsetokens(argc, tokens, commands);
     return commandc;
 }
